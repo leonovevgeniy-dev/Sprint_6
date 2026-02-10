@@ -13,7 +13,7 @@ def driver():
     
     
     service = Service(executable_path=r"C:\WebDriver\geckodriver.exe")
-    #закоментить строку 15 и раскоментить  17-18 на webdriver-manager, чтобы не зависеть от пути к драйверу.
+    #закоментить строку выше и раскоментить  две ниже на webdriver-manager, чтобы не зависеть от пути к драйверу.
     # from webdriver_manager.firefox import GeckoDriverManager
     # service = Service(GeckoDriverManager().install())
     driver = webdriver.Firefox(service=service, options=options)

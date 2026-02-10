@@ -1,20 +1,17 @@
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from locators.main_page_locators import MainPageLocators
-import time
+from pages.base_page import BasePage
+from urls import MAIN_PAGE_URL
 
-class MainPage: 
+class MainPage(BasePage):
     
     def __init__(self, driver):
-        self.driver = driver
-        self.wait = WebDriverWait(driver, 10)
+        super().__init__(driver, url=MAIN_PAGE_URL)
         
     def open(self):
-        self.driver.get("https://qa-scooter.praktikum-services.ru/")
-        self.wait.until(EC.visibility_of_element_located(MainPageLocators.HEADER))
-        return self
+        return super().open()
     
     def get_order_button(self, button_type='top'):
         if button_type == 'top':
@@ -22,8 +19,8 @@ class MainPage:
                 MainPageLocators.ORDER_BUTTON_TOP
             ))
         else:
-            bottom_button = self.driver.find_element(*MainPageLocators.ORDER_BUTTON_BOTTOM)
-            self.driver.execute_script("arguments[0].scrollIntoView();", bottom_button)
+            bottom_button = self.find_element(MainPageLocators.ORDER_BUTTON_BOTTOM)
+            self.scroll_to_element(bottom_button)
             return self.wait.until(EC.element_to_be_clickable(
                 MainPageLocators.ORDER_BUTTON_BOTTOM
             ))
@@ -33,13 +30,14 @@ class MainPage:
         button.click()
         
     def click_question(self, question_index):
-        questions_section = self.driver.find_element(*MainPageLocators.QUESTIONS_SECTION)
+        questions_section = self.find_element(MainPageLocators.QUESTIONS_SECTION)
+        self.scroll_to_element(questions_section)
         
-        self.driver.execute_script("arguments[0].scrollIntoView(true);", questions_section)
+        self.wait.until(EC.element_to_be_clickable(
+            MainPageLocators.QUESTION_HEADERS[question_index]
+        ))
         
-        time.sleep(0.5)
-        
-        question = self.driver.find_element(*MainPageLocators.QUESTION_HEADERS[question_index])
+        question = self.find_element(MainPageLocators.QUESTION_HEADERS[question_index])
         self.driver.execute_script("arguments[0].click();", question)
         
     def get_answer_text(self, question_index):
@@ -60,5 +58,3 @@ class MainPage:
         ))
         logo.click()
         
-    def get_current_url(self):
-        return self.driver.current_url

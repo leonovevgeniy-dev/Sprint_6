@@ -13,6 +13,7 @@ tests/
   -test_order.py
   -test_questions.py
 pages/
+  -base_page.py
   -main_page.py
   -order_page.py
 locators/
@@ -24,6 +25,7 @@ conftest.py
 requirements.txt
 README.md
 .gitignore
+urls.py
 
 ## Установка
 # Установите Firefox браузер

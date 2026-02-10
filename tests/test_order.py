@@ -1,7 +1,9 @@
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import pytest
 import allure
 from data.test_data import TestDataOrder
+from urls import MAIN_PAGE_URL, DZEN_URL
 
 
 @allure.feature("Заказ самоката")
@@ -57,9 +59,8 @@ class TestOrderScooter:
             
         with allure.step("2. Проверить URL главной страницы"):
             current_url = main_page.get_current_url()
-            expected_url = "https://qa-scooter.praktikum-services.ru/"
-            assert current_url == expected_url, \
-                f"Ожидался URL: {expected_url}, получен: {current_url}"
+            assert current_url == MAIN_PAGE_URL, \
+                f"Ожидался URL: {MAIN_PAGE_URL}, получен: {current_url}"
     
     @allure.title("Проверка редиректа по логотипу Яндекс")
     def test_yandex_logo_redirect(self, driver, main_page):
@@ -78,8 +79,9 @@ class TestOrderScooter:
             driver.switch_to.window(new_window)
             
         with allure.step("4. Проверить URL страницы Дзен"):
-            import time
-            time.sleep(2)  # Ждем загрузки
+            WebDriverWait(driver, 10).until(
+                EC.url_contains("dzen.ru")
+            )
             current_url = driver.current_url
             assert "dzen.ru" in current_url, \
                 f"Ожидался переход на Дзен, получен URL: {current_url}"
